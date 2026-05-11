@@ -7,30 +7,33 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="logo_bg.png" />
   <style>
+    .site-logo { display: block; height: 72px; width: auto; margin: 0 auto 10px; }
+    [data-theme="dark"] .site-logo { filter: brightness(0) invert(1); }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: "Inter", sans-serif; background: #F9FAFB; color: #111827; min-height: 100vh; }
     .wrapper { max-width: 720px; margin: 0 auto; padding: 0 16px 56px; }
     header { text-align: center; padding: 40px 0 32px; }
-    header h1 { font-size: 2rem; font-weight: 700; color: #059669; letter-spacing: -0.5px; }
+    header h1 { font-size: 2rem; font-weight: 700; color: #111827; letter-spacing: -0.5px; }
     header p.tagline { font-size: 1.05rem; color: #6B7280; margin-top: 6px; }
     header p.trust { font-size: 0.78rem; color: #9CA3AF; margin-top: 10px; }
-    .countries-badge { display: inline-block; margin-top: 12px; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 20px; padding: 4px 14px; font-size: 0.75rem; font-weight: 600; color: #065F46; }
+    .countries-badge { display: inline-block; margin-top: 12px; background: #F3F4F6; border: 1px solid #D1D5DB; border-radius: 20px; padding: 4px 14px; font-size: 0.75rem; font-weight: 600; color: #111827; }
     .form-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 28px; }
     .form-group { margin-bottom: 18px; }
     label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 6px; }
     input[type="number"], select { width: 100%; padding: 10px 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: #111827; background: #fff; outline: none; transition: border-color 0.15s; }
-    input[type="number"]:focus, select:focus { border-color: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,0.12); }
+    input[type="number"]:focus, select:focus { border-color: #111827; box-shadow: 0 0 0 3px rgba(17,24,39,0.12); }
     input[type="number"]::placeholder { color: #9CA3AF; }
     .input-prefix { position: relative; }
     .input-prefix span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6B7280; font-size: 0.95rem; pointer-events: none; }
     .input-prefix input { padding-left: 36px; }
     .toggle-group { display: flex; border: 1px solid #D1D5DB; border-radius: 8px; overflow: hidden; }
     .toggle-group button { flex: 1; padding: 9px 0; border: none; background: #fff; font-family: inherit; font-size: 0.875rem; font-weight: 500; color: #6B7280; cursor: pointer; transition: background 0.15s, color 0.15s; }
-    .toggle-group button.active { background: #059669; color: #fff; }
+    .toggle-group button.active { background: #111827; color: #fff; }
     .toggle-group button:not(:last-child) { border-right: 1px solid #D1D5DB; }
     .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #059669; cursor: pointer; flex-shrink: 0; }
+    .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #111827; cursor: pointer; flex-shrink: 0; }
     .checkbox-row label { margin: 0; font-size: 0.875rem; cursor: pointer; }
     #country-fields { margin-top: 4px; }
     .country-section { border-top: 1px solid #E5E7EB; padding-top: 18px; margin-top: 4px; }
@@ -40,15 +43,15 @@
     .two-col .form-group { margin-bottom: 0; }
     .field-error { font-size: 0.78rem; color: #DC2626; margin-top: 4px; }
     .field-warning { font-size: 0.78rem; color: #D97706; margin-top: 4px; background: #FFFBEB; padding: 6px 10px; border-radius: 6px; border-left: 3px solid #F59E0B; }
-    #calc-btn { width: 100%; padding: 13px; background: #059669; color: #fff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
-    #calc-btn:hover { background: #047857; }
-    #results { display: none; margin-top: 28px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 28px; }
+    #calc-btn { width: 100%; padding: 13px; background: #111827; color: #fff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
+    #calc-btn:hover { background: #374151; }
+    #results { display: none; margin-top: 28px; background: #F3F4F6; border: 1px solid #D1D5DB; border-radius: 12px; padding: 28px; }
     .results-header { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #6B7280; margin-bottom: 16px; }
     .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
     .summary-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; text-align: center; }
     .summary-card .card-label { font-size: 0.72rem; font-weight: 500; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
     .summary-card .card-value { font-size: 1.05rem; font-weight: 700; color: #111827; }
-    .summary-card.net .card-value { color: #059669; }
+    .summary-card.net .card-value { color: #111827; }
     .summary-card .card-freq { font-size: 0.7rem; color: #9CA3AF; margin-top: 3px; }
     .breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; margin-bottom: 22px; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #E5E7EB; }
     .breakdown-table thead th { text-align: right; padding: 10px 12px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #6B7280; background: #F9FAFB; border-bottom: 1px solid #E5E7EB; }
@@ -57,18 +60,18 @@
     .breakdown-table tbody td:first-child { text-align: left; color: #111827; }
     .breakdown-table tfoot td { padding: 10px 12px; text-align: right; font-weight: 600; border-top: 2px solid #E5E7EB; color: #111827; background: #F9FAFB; }
     .breakdown-table tfoot td:first-child { text-align: left; }
-    .breakdown-table tfoot tr.net-row td { color: #059669; }
+    .breakdown-table tfoot tr.net-row td { color: #111827; }
     .stacked-bar-wrap { margin-bottom: 18px; }
     .stacked-bar { display: flex; height: 38px; border-radius: 8px; overflow: hidden; width: 100%; }
     .bar-seg { display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: #fff; overflow: hidden; white-space: nowrap; transition: width 0.3s; }
     .bar-seg.tax { background: #EF4444; }
     .bar-seg.deductions { background: #F59E0B; }
-    .bar-seg.takehome { background: #059669; }
+    .bar-seg.takehome { background: #111827; }
     .bar-legend { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
     .bar-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #6B7280; }
     .bar-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .eff-rate { display: inline-block; background: #fff; border: 1px solid #BBF7D0; border-radius: 20px; padding: 6px 18px; font-size: 0.92rem; font-weight: 600; color: #059669; margin-bottom: 16px; }
-    .context-note { font-size: 0.82rem; color: #6B7280; background: #fff; border-left: 3px solid #059669; padding: 10px 14px; border-radius: 0 6px 6px 0; margin-top: 4px; line-height: 1.5; }
+    .eff-rate { display: inline-block; background: #fff; border: 1px solid #D1D5DB; border-radius: 20px; padding: 6px 18px; font-size: 0.92rem; font-weight: 600; color: #111827; margin-bottom: 16px; }
+    .context-note { font-size: 0.82rem; color: #6B7280; background: #fff; border-left: 3px solid #111827; padding: 10px 14px; border-radius: 0 6px 6px 0; margin-top: 4px; line-height: 1.5; }
     .tax-year-badge { display: inline-block; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 4px; padding: 2px 7px; font-size: 0.68rem; font-weight: 600; color: #1D4ED8; margin-left: 6px; vertical-align: middle; }
     .disclaimer { text-align: center; font-size: 0.72rem; color: #9CA3AF; margin-top: 32px; line-height: 1.6; }
     @media (max-width: 540px) {
@@ -76,14 +79,75 @@
       .summary-cards { grid-template-columns: 1fr; gap: 8px; }
       .form-card, #results { padding: 16px; }
       .breakdown-table thead th, .breakdown-table tbody td, .breakdown-table tfoot td { padding: 8px 6px; font-size: 0.78rem; }
-      #calc-btn { position: sticky; bottom: 16px; z-index: 10; box-shadow: 0 4px 16px rgba(5,150,105,0.4); }
+      #calc-btn { position: sticky; bottom: 16px; z-index: 10; box-shadow: 0 4px 16px rgba(17,24,39,0.4); }
       .two-col { flex-direction: column; }
     }
+
+    /* === DARK MODE === */
+    [data-theme="dark"] body { background: #0F172A; color: #E2E8F0; }
+    [data-theme="dark"] header h1 { color: #E2E8F0; }
+    [data-theme="dark"] header p.tagline, [data-theme="dark"] header p.trust { color: #94A3B8; }
+    [data-theme="dark"] .countries-badge { background: #1E293B; border-color: #475569; color: #CBD5E1; }
+    [data-theme="dark"] .form-card { background: #1E293B; border-color: #334155; }
+    [data-theme="dark"] label { color: #CBD5E1; }
+    [data-theme="dark"] input[type="number"], [data-theme="dark"] select { background: #0F172A; border-color: #475569; color: #E2E8F0; }
+    [data-theme="dark"] input[type="number"]:focus, [data-theme="dark"] select:focus { border-color: #E2E8F0; box-shadow: 0 0 0 3px rgba(226,232,240,0.15); }
+    [data-theme="dark"] .toggle-group { border-color: #475569; }
+    [data-theme="dark"] .toggle-group button { background: #1E293B; color: #94A3B8; }
+    [data-theme="dark"] .toggle-group button.active { background: #E2E8F0; color: #0F172A; }
+    [data-theme="dark"] .toggle-group button:not(:last-child) { border-color: #475569; }
+    [data-theme="dark"] .country-section { border-top-color: #334155; }
+    [data-theme="dark"] .country-section h3 { color: #64748B; }
+    [data-theme="dark"] .country-section p { color: #94A3B8; }
+    [data-theme="dark"] #results { background: #1E293B; border-color: #334155; }
+    [data-theme="dark"] .results-header { color: #94A3B8; }
+    [data-theme="dark"] .summary-card { background: #0F172A; border-color: #334155; }
+    [data-theme="dark"] .summary-card .card-label { color: #64748B; }
+    [data-theme="dark"] .summary-card .card-value { color: #E2E8F0; }
+    [data-theme="dark"] .summary-card.net .card-value { color: #E2E8F0; }
+    [data-theme="dark"] .summary-card .card-freq { color: #64748B; }
+    [data-theme="dark"] .breakdown-table { background: #0F172A; border-color: #334155; }
+    [data-theme="dark"] .breakdown-table thead th { color: #64748B; background: #0F172A; border-bottom-color: #334155; }
+    [data-theme="dark"] .breakdown-table tbody td { color: #94A3B8; border-bottom-color: #1E293B; }
+    [data-theme="dark"] .breakdown-table tbody td:first-child { color: #E2E8F0; }
+    [data-theme="dark"] .breakdown-table tfoot td { background: #0F172A; border-top-color: #334155; color: #E2E8F0; }
+    [data-theme="dark"] .breakdown-table tfoot tr.net-row td { color: #E2E8F0; }
+    [data-theme="dark"] .eff-rate { background: #0F172A; border-color: #334155; color: #E2E8F0; }
+    [data-theme="dark"] .context-note { background: #0F172A; color: #94A3B8; border-left-color: #E2E8F0; }
+    [data-theme="dark"] .disclaimer { color: #64748B; }
+    [data-theme="dark"] .field-warning { background: #1C1500; color: #FCD34D; border-left-color: #F59E0B; }
+    [data-theme="dark"] .tax-year-badge { background: #1E3A5F; border-color: #3B82F6; color: #93C5FD; }
+    [data-theme="dark"] #calc-btn { background: #E2E8F0; color: #0F172A; }
+    [data-theme="dark"] #calc-btn:hover { background: #CBD5E1; }
+    [data-theme="dark"] .checkbox-row label { color: #CBD5E1; }
+    [data-theme="dark"] .field-error { color: #FCA5A5; }
+
+    /* Theme toggle button */
+    #theme-toggle {
+      position: fixed; top: 16px; right: 16px; z-index: 100;
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid #D1D5DB; background: #fff;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      padding: 0; transition: background 0.15s, border-color 0.15s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    #theme-toggle:hover { background: #F3F4F6; border-color: #9CA3AF; }
+    #theme-toggle svg { display: block; }
+    [data-theme="dark"] #theme-toggle { background: #1E293B; border-color: #334155; }
+    [data-theme="dark"] #theme-toggle:hover { background: #273549; border-color: #475569; }
+    [data-theme="dark"] #theme-toggle svg { stroke: #E2E8F0; }
   </style>
 </head>
 <body>
+<button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode" aria-label="Toggle dark/light mode">
+  <svg id="toggle-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- moon icon shown by default (light mode → click to go dark) -->
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+</button>
 <div class="wrapper">
   <header>
+    <img src="logo_bg.png" alt="PaycheckDecoder" class="site-logo" />
     <h1>PaycheckDecoder</h1>
     <p class="tagline">Know exactly what lands in your bank</p>
     <p class="trust">Free forever &middot; No signup &middot; Updated tax rates 2025&#8211;2026</p>
@@ -187,7 +251,7 @@
       <div class="bar-legend">
         <div class="bar-legend-item"><div class="bar-legend-dot" style="background:#EF4444"></div>Income Tax</div>
         <div class="bar-legend-item"><div class="bar-legend-dot" style="background:#F59E0B"></div>Other Deductions</div>
-        <div class="bar-legend-item"><div class="bar-legend-dot" style="background:#059669"></div>Take-Home</div>
+        <div class="bar-legend-item"><div class="bar-legend-dot" style="background:#111827"></div>Take-Home</div>
       </div>
     </div>
     <div style="margin-top:14px"><span class="eff-rate" id="eff-rate-badge"></span></div>
@@ -629,6 +693,28 @@ document.getElementById('country').addEventListener('change',function(){
 });
 document.addEventListener('keydown',e=>{if(e.key==='Enter')calculate();});
 renderCountryFields('US');
+
+const MOON_SVG='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+const SUN_SVG='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+function setToggleIcon(isDark){
+  document.getElementById('toggle-icon').innerHTML=isDark?SUN_SVG:MOON_SVG;
+}
+function toggleTheme(){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const next=isDark?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  setToggleIcon(next==='dark');
+  try{localStorage.setItem('theme',next);}catch(e){}
+}
+(function(){
+  try{
+    const saved=localStorage.getItem('theme');
+    if(saved==='dark'){
+      document.documentElement.setAttribute('data-theme','dark');
+      setToggleIcon(true);
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
