@@ -1,0 +1,634 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PaycheckDecoder — Know exactly what lands in your bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Inter", sans-serif; background: #F9FAFB; color: #111827; min-height: 100vh; }
+    .wrapper { max-width: 720px; margin: 0 auto; padding: 0 16px 56px; }
+    header { text-align: center; padding: 40px 0 32px; }
+    header h1 { font-size: 2rem; font-weight: 700; color: #059669; letter-spacing: -0.5px; }
+    header p.tagline { font-size: 1.05rem; color: #6B7280; margin-top: 6px; }
+    header p.trust { font-size: 0.78rem; color: #9CA3AF; margin-top: 10px; }
+    .countries-badge { display: inline-block; margin-top: 12px; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 20px; padding: 4px 14px; font-size: 0.75rem; font-weight: 600; color: #065F46; }
+    .form-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 28px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 6px; }
+    input[type="number"], select { width: 100%; padding: 10px 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: #111827; background: #fff; outline: none; transition: border-color 0.15s; }
+    input[type="number"]:focus, select:focus { border-color: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,0.12); }
+    input[type="number"]::placeholder { color: #9CA3AF; }
+    .input-prefix { position: relative; }
+    .input-prefix span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6B7280; font-size: 0.95rem; pointer-events: none; }
+    .input-prefix input { padding-left: 36px; }
+    .toggle-group { display: flex; border: 1px solid #D1D5DB; border-radius: 8px; overflow: hidden; }
+    .toggle-group button { flex: 1; padding: 9px 0; border: none; background: #fff; font-family: inherit; font-size: 0.875rem; font-weight: 500; color: #6B7280; cursor: pointer; transition: background 0.15s, color 0.15s; }
+    .toggle-group button.active { background: #059669; color: #fff; }
+    .toggle-group button:not(:last-child) { border-right: 1px solid #D1D5DB; }
+    .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #059669; cursor: pointer; flex-shrink: 0; }
+    .checkbox-row label { margin: 0; font-size: 0.875rem; cursor: pointer; }
+    #country-fields { margin-top: 4px; }
+    .country-section { border-top: 1px solid #E5E7EB; padding-top: 18px; margin-top: 4px; }
+    .country-section h3 { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #9CA3AF; margin-bottom: 14px; }
+    .two-col { display: flex; gap: 12px; align-items: flex-end; }
+    .two-col > * { flex: 1; }
+    .two-col .form-group { margin-bottom: 0; }
+    .field-error { font-size: 0.78rem; color: #DC2626; margin-top: 4px; }
+    .field-warning { font-size: 0.78rem; color: #D97706; margin-top: 4px; background: #FFFBEB; padding: 6px 10px; border-radius: 6px; border-left: 3px solid #F59E0B; }
+    #calc-btn { width: 100%; padding: 13px; background: #059669; color: #fff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
+    #calc-btn:hover { background: #047857; }
+    #results { display: none; margin-top: 28px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 28px; }
+    .results-header { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #6B7280; margin-bottom: 16px; }
+    .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .summary-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; text-align: center; }
+    .summary-card .card-label { font-size: 0.72rem; font-weight: 500; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .summary-card .card-value { font-size: 1.05rem; font-weight: 700; color: #111827; }
+    .summary-card.net .card-value { color: #059669; }
+    .summary-card .card-freq { font-size: 0.7rem; color: #9CA3AF; margin-top: 3px; }
+    .breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; margin-bottom: 22px; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #E5E7EB; }
+    .breakdown-table thead th { text-align: right; padding: 10px 12px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #6B7280; background: #F9FAFB; border-bottom: 1px solid #E5E7EB; }
+    .breakdown-table thead th:first-child { text-align: left; }
+    .breakdown-table tbody td { padding: 10px 12px; text-align: right; color: #374151; border-bottom: 1px solid #F3F4F6; }
+    .breakdown-table tbody td:first-child { text-align: left; color: #111827; }
+    .breakdown-table tfoot td { padding: 10px 12px; text-align: right; font-weight: 600; border-top: 2px solid #E5E7EB; color: #111827; background: #F9FAFB; }
+    .breakdown-table tfoot td:first-child { text-align: left; }
+    .breakdown-table tfoot tr.net-row td { color: #059669; }
+    .stacked-bar-wrap { margin-bottom: 18px; }
+    .stacked-bar { display: flex; height: 38px; border-radius: 8px; overflow: hidden; width: 100%; }
+    .bar-seg { display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: #fff; overflow: hidden; white-space: nowrap; transition: width 0.3s; }
+    .bar-seg.tax { background: #EF4444; }
+    .bar-seg.deductions { background: #F59E0B; }
+    .bar-seg.takehome { background: #059669; }
+    .bar-legend { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+    .bar-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #6B7280; }
+    .bar-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .eff-rate { display: inline-block; background: #fff; border: 1px solid #BBF7D0; border-radius: 20px; padding: 6px 18px; font-size: 0.92rem; font-weight: 600; color: #059669; margin-bottom: 16px; }
+    .context-note { font-size: 0.82rem; color: #6B7280; background: #fff; border-left: 3px solid #059669; padding: 10px 14px; border-radius: 0 6px 6px 0; margin-top: 4px; line-height: 1.5; }
+    .tax-year-badge { display: inline-block; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 4px; padding: 2px 7px; font-size: 0.68rem; font-weight: 600; color: #1D4ED8; margin-left: 6px; vertical-align: middle; }
+    .disclaimer { text-align: center; font-size: 0.72rem; color: #9CA3AF; margin-top: 32px; line-height: 1.6; }
+    @media (max-width: 540px) {
+      header h1 { font-size: 1.5rem; }
+      .summary-cards { grid-template-columns: 1fr; gap: 8px; }
+      .form-card, #results { padding: 16px; }
+      .breakdown-table thead th, .breakdown-table tbody td, .breakdown-table tfoot td { padding: 8px 6px; font-size: 0.78rem; }
+      #calc-btn { position: sticky; bottom: 16px; z-index: 10; box-shadow: 0 4px 16px rgba(5,150,105,0.4); }
+      .two-col { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1>PaycheckDecoder</h1>
+    <p class="tagline">Know exactly what lands in your bank</p>
+    <p class="trust">Free forever &middot; No signup &middot; Updated tax rates 2025&#8211;2026</p>
+    <span class="countries-badge">21 Countries &middot; 2025&#8211;2026 Tax Rates</span>
+  </header>
+  <div class="form-card">
+    <div class="form-group">
+      <label for="country">Country</label>
+      <select id="country">
+        <optgroup label="Americas">
+          <option value="US" selected>&#127482;&#127480; United States (USD)</option>
+          <option value="CA">&#127464;&#127462; Canada (CAD)</option>
+          <option value="MX">&#127474;&#127485; Mexico (MXN)</option>
+          <option value="BR">&#127463;&#127479; Brazil (BRL)</option>
+        </optgroup>
+        <optgroup label="Europe">
+          <option value="GB">&#127468;&#127463; United Kingdom (GBP)</option>
+          <option value="DE">&#127465;&#127466; Germany (EUR)</option>
+          <option value="FR">&#127467;&#127479; France (EUR)</option>
+          <option value="NL">&#127475;&#127473; Netherlands (EUR)</option>
+          <option value="ES">&#127466;&#127480; Spain (EUR)</option>
+          <option value="IT">&#127470;&#127481; Italy (EUR)</option>
+          <option value="RU">&#127479;&#127482; Russia (RUB)</option>
+        </optgroup>
+        <optgroup label="Asia-Pacific">
+          <option value="IN">&#127470;&#127475; India (INR)</option>
+          <option value="CN">&#127464;&#127475; China (CNY)</option>
+          <option value="JP">&#127471;&#127477; Japan (JPY)</option>
+          <option value="KR">&#127472;&#127479; South Korea (KRW)</option>
+          <option value="SG">&#127480;&#127468; Singapore (SGD)</option>
+          <option value="AU">&#127462;&#127482; Australia (AUD)</option>
+        </optgroup>
+        <optgroup label="Middle East and Africa">
+          <option value="AE">&#127462;&#127466; United Arab Emirates (AED)</option>
+          <option value="SA">&#127480;&#127462; Saudi Arabia (SAR)</option>
+          <option value="PK">&#127477;&#127472; Pakistan (PKR)</option>
+          <option value="ZA">&#127487;&#127462; South Africa (ZAR)</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="gross">Gross Annual Salary</label>
+      <div class="input-prefix">
+        <span id="currency-symbol">$</span>
+        <input type="number" id="gross" placeholder="e.g. 75000" min="1" step="1" />
+      </div>
+      <div id="gross-error" class="field-error" style="display:none"></div>
+      <div id="gross-warning" class="field-warning" style="display:none"></div>
+    </div>
+    <div class="form-group">
+      <label>Display Frequency</label>
+      <div class="toggle-group" id="freq-toggle">
+        <button class="active" data-val="annual">Annual</button>
+        <button data-val="monthly">Monthly</button>
+        <button data-val="weekly">Weekly</button>
+      </div>
+    </div>
+    <div class="form-group" id="filing-group" style="display:none">
+      <label for="filing">Filing Status</label>
+      <select id="filing">
+        <option value="single">Single</option>
+        <option value="married">Married Filing Jointly</option>
+        <option value="hoh">Head of Household</option>
+      </select>
+    </div>
+    <div id="country-fields"></div>
+    <button id="calc-btn" onclick="calculate()">Calculate My Take-Home Pay</button>
+  </div>
+  <div id="results">
+    <div class="results-header">Your Pay Breakdown <span class="tax-year-badge" id="tax-year-badge">2025</span></div>
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="card-label">Gross Pay</div>
+        <div class="card-value" id="r-gross">&#8212;</div>
+        <div class="card-freq" id="r-gross-freq"></div>
+      </div>
+      <div class="summary-card">
+        <div class="card-label">Total Deductions</div>
+        <div class="card-value" id="r-deductions">&#8212;</div>
+        <div class="card-freq" id="r-ded-freq"></div>
+      </div>
+      <div class="summary-card net">
+        <div class="card-label">Net Take-Home</div>
+        <div class="card-value" id="r-net">&#8212;</div>
+        <div class="card-freq" id="r-net-freq"></div>
+      </div>
+    </div>
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Deduction</th><th>Annual</th><th>Monthly</th><th>Weekly</th></tr>
+      </thead>
+      <tbody id="breakdown-body"></tbody>
+      <tfoot id="breakdown-foot"></tfoot>
+    </table>
+    <div class="stacked-bar-wrap">
+      <div class="stacked-bar" id="stacked-bar">
+        <div class="bar-seg tax" id="bar-tax"></div>
+        <div class="bar-seg deductions" id="bar-ded"></div>
+        <div class="bar-seg takehome" id="bar-net"></div>
+      </div>
+      <div class="bar-legend">
+        <div class="bar-legend-item"><div class="bar-legend-dot" style="background:#EF4444"></div>Income Tax</div>
+        <div class="bar-legend-item"><div class="bar-legend-dot" style="background:#F59E0B"></div>Other Deductions</div>
+        <div class="bar-legend-item"><div class="bar-legend-dot" style="background:#059669"></div>Take-Home</div>
+      </div>
+    </div>
+    <div style="margin-top:14px"><span class="eff-rate" id="eff-rate-badge"></span></div>
+    <div class="context-note" id="context-note"></div>
+  </div>
+  <p class="disclaimer">PaycheckDecoder provides estimates based on official 2025&#8211;2026 tax brackets sourced from PwC Worldwide Tax Summaries and official government publications. Actual deductions may vary based on individual circumstances, employer contributions, and local regulations. Consult a qualified tax professional for personalised advice.</p>
+</div>
+<script>
+'use strict';
+const CURRENCY={US:'USD',CA:'CAD',MX:'MXN',BR:'BRL',GB:'GBP',DE:'EUR',FR:'EUR',NL:'EUR',ES:'EUR',IT:'EUR',RU:'RUB',IN:'INR',CN:'CNY',JP:'JPY',KR:'KRW',SG:'SGD',AU:'AUD',AE:'AED',SA:'SAR',PK:'PKR',ZA:'ZAR'};
+const SYMBOL={US:'$',CA:'$',MX:'$',BR:'R$',GB:'&#163;',DE:'&#8364;',FR:'&#8364;',NL:'&#8364;',ES:'&#8364;',IT:'&#8364;',RU:'&#8381;',IN:'&#8377;',CN:'&#165;',JP:'&#165;',KR:'&#8361;',SG:'S$',AU:'A$',AE:'AED ',SA:'SAR ',PK:'Rs',ZA:'R'};
+const AVG_SALARY={US:85000,CA:65000,MX:250000,BR:60000,GB:38000,DE:52000,FR:40000,NL:56000,ES:30000,IT:28000,RU:1400000,IN:600000,CN:120000,JP:5500000,KR:42000000,SG:65000,AU:90000,AE:200000,SA:130000,PK:1500000,ZA:380000};
+const TAX_YEAR={US:'2025',CA:'2025',MX:'2026',BR:'2025',GB:'2025-26',DE:'2025',FR:'2025',NL:'2026',ES:'2025',IT:'2025',RU:'2025',IN:'FY 2025-26',CN:'2025',JP:'2025',KR:'2025',SG:'YA 2026',AU:'2025-26',AE:'2025',SA:'2025',PK:'FY 2024-25',ZA:'2026-27'};
+const CONTEXT_NOTES={
+  US:'The US uses a progressive federal income tax. Social Security (6.2%, wage base $176,100) and Medicare (1.45%) are mandatory FICA payroll taxes. Most states levy additional state income tax.',
+  CA:'Canada has progressive federal income tax (bottom rate cut to 14.5% in 2025) plus provincial tax. CPP and EI are mandatory social insurance. Rates verified from PwC December 2025 review.',
+  MX:'Mexico uses a progressive ISR income tax system. IMSS (social security) employee contributions are approximately 1.5%. 2026 annual brackets from PwC January 2026 review.',
+  BR:'Brazil applies progressive IRPF income tax and tiered INSS social security. The INSS is progressive from 7.5% to 14% on monthly wages. Rates from PwC May 2025 review.',
+  GB:'UK PAYE system. Income tax and Class 1 National Insurance are the primary deductions. The personal allowance of £12,570 and NI thresholds are frozen through 2028. 2025-26 rates.',
+  DE:'Germany uses the official §32a EStG progressive formula. Married couples benefit from Ehegattensplitting (income splitting). Social insurance (pension 9.3%, health ~8.15%, unemployment 1.3%, care 1.7%) applies. Solidarity Surcharge (Soli) only for higher earners since 2021.',
+  FR:'France applies progressive PIT using the quotient familial (family parts) system. Social contributions (CSG/CRDS 9.7%, pension ~10.3%) are separate. State withholding scale 2025.',
+  NL:'Netherlands Box 1 (2026): first bracket includes 27.65% national insurance. General and employment tax credits reduce the final tax. Brackets from PwC December 2025 review.',
+  ES:'Spain combines state and autonomous community income tax. Social security employee contribution is 6.47% (capped at €58,914/year). National withholding scale 2025.',
+  IT:'Italy levies three-layer tax: IRPEF national (23%-43%), regional (~2.28% avg), and municipal (~0.5% avg). INPS social security is 9.19% of gross. Rates from PwC February 2026 review.',
+  RU:'Russia introduced a new 5-tier progressive PIT (13%-22%) effective January 2025. No employee-side social insurance contributions - employers pay those separately.',
+  IN:'Budget 2025 raised the Section 87A rebate to ₹12 lakh under the New Regime. Standard deduction is ₹75,000 for FY 2025-26. The New Regime is now the default for most salaried employees.',
+  CN:'China IIT is applied on comprehensive income after a ¥60,000 annual standard deduction. Social insurance (pension 8%, medical 2%, unemployment 0.5%) is withheld monthly. Rates from PwC December 2025 review.',
+  JP:'Japan national income tax includes a 2.1% reconstruction surtax (through 2037). Local inhabitant tax is a flat 10%. Employee social insurance (pension 9.15%, health ~4.9%, employment 0.6%) is mandatory. PwC review January 2026.',
+  KR:'South Korea applies a generous earned income deduction before tax. National income tax plus 10% local income tax surcharge. National pension (4.5%), health insurance (3.545%), and employment insurance (0.9%) apply.',
+  SG:'Singapore progressive income tax up to 24% with no capital gains or dividend taxes. CPF contributions (20% employee) are mandatory for citizens/PRs, capped at S$6,800 ordinary wages/month. YA 2026 rates from PwC April 2026.',
+  AU:'Australia 2025-26 tax rates with Low Income Tax Offset (LITO, max A$700) and 2% Medicare Levy. From 1 July 2026, the 16% rate will reduce to 15%. Rates from PwC December 2025 review.',
+  AE:'The UAE has no personal income tax. UAE nationals may contribute to GPSSA pension (5%). Expats have zero deductions - gross salary equals net take-home pay.',
+  SA:'Saudi Arabia has no personal income tax. Saudi nationals contribute 10% to GOSI pension. Expats have no deductions - full salary is take-home.',
+  PK:'Pakistan FBR 2024-25 progressive income tax. EOBI is a fixed monthly employee contribution of PKR 900 (Employees Old-Age Benefits Institution). No general social security for salaried employees.',
+  ZA:'South Africa 2026-27 progressive rates (1 March 2026 - 28 Feb 2027). Primary rebate of R17,235. UIF is 1% capped at R17,712/year. Rates from PwC December 2025 review.'
+};
+
+function calcUS(gross,filing,statePct){
+  const stdDed=filing==='married'?30000:filing==='hoh'?22500:15000;
+  const taxable=Math.max(0,gross-stdDed);
+  const brackets=filing==='married'
+    ?[[23850,.10],[96950,.12],[206700,.22],[394600,.24],[501050,.32],[751600,.35],[Infinity,.37]]
+    :filing==='hoh'
+    ?[[17000,.10],[64850,.12],[103350,.22],[197300,.24],[250500,.32],[626350,.35],[Infinity,.37]]
+    :[[11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[626350,.35],[Infinity,.37]];
+  let fedTax=0,prev=0;
+  for(const[lim,rate]of brackets){if(taxable<=prev)break;fedTax+=(Math.min(taxable,lim)-prev)*rate;prev=lim;}
+  const ss=Math.min(gross,176100)*.062;
+  const med=gross*.0145+Math.max(0,gross-200000)*.009;
+  const stateTax=gross*(statePct/100);
+  const rows=[{label:'Federal Income Tax',value:fedTax},{label:'Social Security (6.2%)',value:ss,note:'Wage base $176,100 for 2025'},{label:'Medicare (1.45% + 0.9% above $200K)',value:med}];
+  if(statePct>0)rows.push({label:'State Income Tax ('+statePct+'%)',value:stateTax});
+  return{incomeTax:fedTax,rows};
+}
+
+function calcCA(gross,province){
+  const bpa=16129;
+  const taxable=Math.max(0,gross-bpa);
+  const brackets=[[57375,.145],[114750,.205],[177882,.26],[253414,.29],[Infinity,.33]];
+  let fedTax=0,prev=0;
+  for(const[lim,rate]of brackets){if(taxable<=prev)break;fedTax+=(Math.min(taxable,lim)-prev)*rate;prev=lim;}
+  fedTax=Math.max(0,fedTax-bpa*.145);
+  const provBrackets={
+    ON:[[51446,.0505],[102894,.0915],[150000,.1116],[220000,.1216],[Infinity,.1316]],
+    BC:[[45654,.0506],[91310,.077],[104835,.105],[127299,.1229],[172602,.147],[240716,.168],[Infinity,.205]],
+    AB:[[Infinity,.10]],
+    QC:[[51780,.14],[103545,.19],[126000,.24],[Infinity,.2575]],
+    SK:[[49720,.105],[142058,.125],[Infinity,.145]],
+    MB:[[47000,.108],[100000,.1275],[Infinity,.174]]
+  };
+  const provSlabs=provBrackets[province]||provBrackets.ON;
+  let provTax=0;prev=0;
+  for(const[lim,rate]of provSlabs){if(gross<=prev)break;provTax+=(Math.min(gross,lim)-prev)*rate;prev=lim;}
+  const cpp1=Math.max(0,Math.min(gross,71300)-3500)*.0595;
+  const cpp2=Math.max(0,Math.min(gross,81900)-71300)*.04;
+  const ei=Math.min(gross,65700)*.0164;
+  return{incomeTax:fedTax+provTax,rows:[{label:'Federal Income Tax',value:fedTax,note:'BPA $16,129 credit applied'},{label:'Provincial Tax ('+province+')',value:provTax},{label:'CPP Contribution (5.95%/4%)',value:cpp1+cpp2,note:'CPP1 up to $71,300 + CPP2 $71,301-$81,900'},{label:'EI Premium (1.64%)',value:ei,note:'Max insurable earnings $65,700'}]};
+}
+
+function calcMX(gross){
+  const b=[[0,121621.32,0,.0192],[121621.33,1032265.32,2335.08,.064],[1032265.33,1814114.28,60616.44,.1088],[1814114.29,2108827.92,145681.56,.16],[2108827.93,2524844.28,192835.68,.1792],[2524844.29,5092247.64,267385.68,.2136],[5092247.65,8026081.68,815783.04,.2352],[8026081.69,15323111.76,1505820.84,.30],[15323111.77,20430815.64,3694929.72,.32],[20430815.65,61292447.04,5329394.76,.34],[61292447.05,Infinity,19222349.52,.35]];
+  let tax=0;
+  for(const[lo,hi,base,rate]of b){if(gross>=lo){if(gross<=hi){tax=base+(gross-lo)*rate;break;}}}
+  const imss=gross*.015;
+  return{incomeTax:tax,rows:[{label:'ISR Income Tax (2026)',value:tax},{label:'IMSS Social Security (~1.5%)',value:imss,note:'Approx combined employee contributions'}]};
+}
+
+function calcBR(gross,hasINSS){
+  const mg=gross/12;
+  const sl=[[1518,.075],[2793.88,.09],[4189.75,.12],[8157.41,.14]];
+  let mi=0,pv=0;
+  for(const[lim,rate]of sl){if(mg<=pv)break;mi+=(Math.min(mg,lim)-pv)*rate;pv=lim;if(mg<=lim)break;}
+  const ai=hasINSS?mi*12:0;
+  const ta=Math.max(0,gross-ai);
+  const ib=[[0,27110.40,0],[27110.41,33919.80,.075],[33919.81,45012.60,.15],[45012.61,55976.16,.225],[55976.17,Infinity,.275]];
+  let tax=0;
+  for(const[lo,hi,rate]of ib){if(ta>=lo){if(ta<=hi){tax+=(ta-lo)*rate;break;}else{tax+=(hi-lo)*rate;}}}
+  const rows=[{label:'IRPF Income Tax',value:tax}];
+  if(hasINSS)rows.push({label:'INSS Social Security',value:ai,note:'Progressive 7.5-14% on monthly wages'});
+  return{incomeTax:tax,rows};
+}
+
+function calcGB(gross,hasSL,hasBlind){
+  let pa=12570+(hasBlind?2870:0);
+  if(gross>100000)pa=Math.max(0,pa-Math.floor((gross-100000)/2));
+  const taxable=Math.max(0,gross-pa);
+  const bl=Math.max(0,50270-pa);
+  const hl=Math.max(0,125140-pa);
+  let tax=0;
+  if(taxable<=bl)tax=taxable*.20;
+  else if(taxable<=hl)tax=bl*.20+(taxable-bl)*.40;
+  else tax=bl*.20+(hl-bl)*.40+(taxable-hl)*.45;
+  let ni=0;
+  if(gross>50270)ni=(50270-12570)*.08+(gross-50270)*.02;
+  else if(gross>12570)ni=(gross-12570)*.08;
+  const rows=[{label:'Income Tax (PAYE)',value:tax,note:'Personal allowance £12,570'},{label:'National Insurance Class 1',value:ni,note:'8% (£12,570-£50,270), 2% above'}];
+  if(hasSL&&gross>27295)rows.push({label:'Student Loan Plan 2 (9%)',value:(gross-27295)*.09});
+  return{incomeTax:tax,rows};
+}
+
+function calcDE(gross,married){
+  function gTax(z){
+    if(z<=12096)return 0;
+    if(z<=17443){const y=(z-12096)/10000;return(974.34*y+1400)*y;}
+    if(z<=66760){const w=(z-17443)/10000;return(192.59*w+2397)*w+1025.38;}
+    if(z<=277826)return .42*z-10602.13;
+    return .45*z-18936.88;
+  }
+  const rawTax=married?gTax(gross/2)*2:gTax(gross);
+  const st=married?35086:17543;
+  let soli=0;
+  if(rawTax>st)soli=rawTax*.055;
+  else if(rawTax>st*.97)soli=(rawTax-st*.97)*.20;
+  const pc=96600,hc=66150;
+  const pension=Math.min(gross,pc)*.093;
+  const unemp=Math.min(gross,pc)*.013;
+  const health=Math.min(gross,hc)*.0815;
+  const care=Math.min(gross,hc)*.017;
+  return{incomeTax:rawTax+soli,rows:[{label:'Income Tax (Lohnsteuer)',value:rawTax,note:'Official §32a EStG formula 2025'},{label:'Solidarity Surcharge (Soli)',value:soli,note:'5.5% only for higher earners since 2021'},{label:'Pension Insurance (9.3%)',value:pension,note:'Cap €96,600/year (West BBG 2025)'},{label:'Unemployment Insurance (1.3%)',value:unemp},{label:'Health Insurance (~8.15%)',value:health,note:'7.3% standard + avg Zusatzbeitrag'},{label:'Care Insurance (1.7%)',value:care,note:'Childless above 23: 2.0%'}]};
+}
+
+function calcFR(gross,parts){
+  const b=[[11497,0],[29315,.11],[83823,.30],[180294,.41],[Infinity,.45]];
+  function ft(inc){let t=0,p=0;for(const[lim,rate]of b){if(inc<=p)break;t+=(Math.min(inc,lim)-p)*rate;p=lim;}return t;}
+  const pit=ft(gross/parts)*parts;
+  const csgCrds=gross*.097;
+  const sc=46368;
+  const pensBase=Math.min(gross,sc)*.069+Math.max(0,gross-sc)*.004;
+  const pensComp=Math.min(gross,sc)*.0393;
+  return{incomeTax:pit,rows:[{label:'Income Tax (PIT)',value:pit,note:'Quotient familial system 2025'},{label:'CSG/CRDS (9.7%)',value:csgCrds,note:'6.8% CSG partially deductible for PIT'},{label:'Pension Retraite de Base (6.9%)',value:pensBase,note:'Capped at SS ceiling €46,368'},{label:'Pension AGIRC-ARRCO (~3.93%)',value:pensComp,note:'Complementary pension'}]};
+}
+
+function calcNL(gross){
+  let tax=0;
+  if(gross<=38883)tax=gross*.3575;
+  else if(gross<=78426)tax=38883*.3575+(gross-38883)*.3756;
+  else tax=38883*.3575+(78426-38883)*.3756+(gross-78426)*.495;
+  let atk=0;
+  if(gross<=24813)atk=3362;
+  else if(gross<=76814)atk=Math.max(0,3362-(gross-24813)*.06095);
+  let ak=0;
+  if(gross<=11491)ak=gross*.08231;
+  else if(gross<=24820)ak=945+(gross-11491)*.29861;
+  else if(gross<=39958)ak=3867+(gross-24820)*.03085;
+  else if(gross<=124935)ak=Math.max(0,4334-(gross-39958)*.06510);
+  const taxNet=Math.max(0,tax-atk-ak);
+  return{incomeTax:taxNet,rows:[{label:'Box 1 Tax (incl. 27.65% NI)',value:tax,note:'2026 rates: 35.75% / 37.56% / 49.50%'},{label:'General Tax Credit (-)',value:-atk,note:'Reduces tax payable'},{label:'Employment Tax Credit (-)',value:-ak,note:'Reduces tax payable'}]};
+}
+
+function calcES(gross){
+  const b=[[12450,0],[20200,.19],[35200,.24],[60000,.30],[300000,.37],[Infinity,.47]];
+  let tax=0,prev=0;
+  for(const[lim,rate]of b){if(gross<=prev)break;tax+=(Math.min(gross,lim)-prev)*rate;prev=lim;}
+  const ss=Math.min(gross,58914)*.0647;
+  return{incomeTax:tax,rows:[{label:'Income Tax (IRPF)',value:tax,note:'National withholding scale 2025; varies by community'},{label:'Social Security (6.47%)',value:ss,note:'Cap €58,914/yr: General 4.7% + Unemployment 1.55% + Training 0.1% + MEI 0.12%'}]};
+}
+
+function calcIT(gross){
+  const b=[[28000,.23],[50000,.33],[Infinity,.43]];
+  let tax=0,prev=0;
+  for(const[lim,rate]of b){if(gross<=prev)break;tax+=(Math.min(gross,lim)-prev)*rate;prev=lim;}
+  const reg=gross*.0228;
+  const mun=gross*.005;
+  const inps=gross*.0919;
+  return{incomeTax:tax+reg+mun,rows:[{label:'IRPEF National',value:tax,note:'2025 brackets: 23%/33%/43%'},{label:'Regional Tax (avg 2.28%)',value:reg,note:'Varies by region: 1.23%-3.33%'},{label:'Municipal Tax (avg 0.5%)',value:mun,note:'Varies: 0%-0.9%'},{label:'INPS Social Security (9.19%)',value:inps}]};
+}
+
+function calcRU(gross){
+  let tax=0;
+  if(gross<=2400000)tax=gross*.13;
+  else if(gross<=5000000)tax=312000+(gross-2400000)*.15;
+  else if(gross<=20000000)tax=702000+(gross-5000000)*.18;
+  else if(gross<=50000000)tax=3402000+(gross-20000000)*.20;
+  else tax=9402000+(gross-50000000)*.22;
+  return{incomeTax:tax,rows:[{label:'Personal Income Tax (NDFL)',value:tax,note:'5-tier progressive system from Jan 2025: 13%-22%'},{label:'Social Insurance (employer-paid)',value:0,note:'No employee social contributions in Russia'}]};
+}
+
+function calcIN(gross,regime,basicM,hasPF,hasPT){
+  const sd=75000;
+  let tax=0;
+  if(regime==='new'){
+    const t=Math.max(0,gross-sd);
+    const s=[[400000,0],[800000,.05],[1200000,.10],[1600000,.15],[2000000,.20],[2400000,.25],[Infinity,.30]];
+    let p=0;for(const[lim,rate]of s){if(t<=p)break;tax+=(Math.min(t,lim)-p)*rate;p=lim;}
+    if((gross-sd)<=1200000)tax=0;
+  }else{
+    const t=Math.max(0,gross-sd);
+    const s=[[250000,0],[500000,.05],[1000000,.20],[Infinity,.30]];
+    let p=0;for(const[lim,rate]of s){if(t<=p)break;tax+=(Math.min(t,lim)-p)*rate;p=lim;}
+    if(gross<=500000)tax=0;
+  }
+  tax=tax*1.04;
+  const rows=[{label:'Income Tax + 4% Cess ('+(regime==='new'?'New':'Old')+' Regime)',value:tax,note:regime==='new'?'87A rebate: zero tax if income ≤ ₹12L':'87A rebate: zero tax if income ≤ ₹5L'}];
+  if(hasPF&&basicM>0){const pf=Math.min(basicM,15000)*.12*12;rows.push({label:'EPF Employee Contribution (12%)',value:pf,note:'Capped at ₹15,000 basic/month'});}
+  if(hasPT)rows.push({label:'Professional Tax',value:2400,note:'₹200/month — varies by state'});
+  return{incomeTax:tax,rows};
+}
+
+function calcCN(gross){
+  const t=Math.max(0,gross-60000);
+  const b=[[36000,.03,0],[144000,.10,2520],[300000,.20,16920],[420000,.25,31920],[660000,.30,52920],[960000,.35,85920],[Infinity,.45,181920]];
+  let tax=0;for(const[lim,rate,q]of b){if(t<=lim){tax=Math.max(0,t*rate-q);break;}}
+  const si=Math.min(gross,252000)*.105;
+  return{incomeTax:tax,rows:[{label:'Individual Income Tax (IIT)',value:tax,note:'After ¥60,000 standard deduction'},{label:'Social Insurance (10.5%)',value:si,note:'Pension 8% + Medical 2% + Unemployment 0.5%, capped ~¥252,000'}]};
+}
+
+function calcJP(gross){
+  let eid=0;
+  if(gross<=1625000)eid=550000;
+  else if(gross<=1800000)eid=gross*.40-100000;
+  else if(gross<=3600000)eid=gross*.30+80000;
+  else if(gross<=6600000)eid=gross*.20+440000;
+  else if(gross<=8500000)eid=gross*.10+1100000;
+  else eid=1950000;
+  const bd=gross<=24000000?480000:0;
+  const tx=Math.max(0,gross-eid-bd);
+  const nb=[[1950000,.05,0],[3300000,.10,97500],[6950000,.20,427500],[9000000,.23,636000],[18000000,.33,1536000],[40000000,.40,2796000],[Infinity,.45,4796000]];
+  let nat=0;for(const[lim,rate,d]of nb){if(tx<=lim){nat=Math.max(0,tx*rate-d);break;}}
+  const sur=nat*.021;
+  const loc=tx*.10;
+  const pen=Math.min(gross,7800000)*.0915;
+  const hlt=Math.min(gross,9180000)*.049;
+  const emp=gross*.006;
+  return{incomeTax:nat+sur+loc,rows:[{label:'National Income Tax',value:nat,note:'After employment income deduction + ¥480K basic deduction'},{label:'Reconstruction Surtax (2.1%)',value:sur,note:'Through 2037'},{label:'Local Inhabitant Tax (10%)',value:loc},{label:'Pension Insurance (9.15%)',value:pen,note:'Capped ~¥7.8M/year'},{label:'Health Insurance (~4.9%)',value:hlt,note:'Kyokai Kenpo average rate'},{label:'Employment Insurance (0.6%)',value:emp}]};
+}
+
+function calcKR(gross){
+  let eid=0;
+  if(gross<=5000000)eid=gross*.70;
+  else if(gross<=15000000)eid=3500000+(gross-5000000)*.40;
+  else if(gross<=45000000)eid=7500000+(gross-15000000)*.15;
+  else if(gross<=100000000)eid=12000000+(gross-45000000)*.05;
+  else eid=14750000;
+  eid=Math.min(eid,20000000);
+  const tx=Math.max(0,gross-eid-1500000);
+  const b=[[14000000,.06],[50000000,.15],[88000000,.24],[150000000,.35],[300000000,.38],[500000000,.40],[1000000000,.42],[Infinity,.45]];
+  let nat=0,pv=0;for(const[lim,rate]of b){if(tx<=pv)break;nat+=(Math.min(tx,lim)-pv)*rate;pv=lim;}
+  const loc=nat*.10;
+  const pen=Math.min(gross,70800000)*.045;
+  const hlt=Math.min(gross,116070000)*.03545;
+  const emp=gross*.009;
+  return{incomeTax:nat+loc,rows:[{label:'National Income Tax (소득세)',value:nat,note:'After earned income deduction + basic deduction ₩1.5M'},{label:'Local Income Tax (지방소득세)',value:loc,note:'10% of income tax'},{label:'National Pension (4.5%)',value:pen,note:'Capped ₩70.8M/year'},{label:'National Health Insurance (3.545%)',value:hlt},{label:'Employment Insurance (0.9%)',value:emp}]};
+}
+
+function calcSG(gross){
+  const b=[[20000,0,0],[30000,0,.02],[40000,200,.035],[80000,550,.07],[120000,3350,.115],[160000,7950,.15],[200000,13950,.18],[240000,21150,.19],[280000,28750,.195],[320000,36550,.20],[500000,44550,.22],[1000000,84150,.23],[Infinity,199150,.24]];
+  let tax=0;
+  for(let i=0;i<b.length;i++){const[lim,base,rate]=b[i];const pl=i===0?0:b[i-1][0];if(gross<=pl)break;if(gross<=lim||i===b.length-1){tax=base+(gross-pl)*rate;break;}}
+  const cpf=Math.min(gross,102000)*.20;
+  return{incomeTax:tax,rows:[{label:'Income Tax (YA 2026)',value:tax},{label:'CPF Employee (20%)',value:cpf,note:'Citizens/PRs only. Capped at S$102,000 total wages/year'}]};
+}
+
+function calcAU(gross){
+  let tax=0;
+  if(gross<=18200)tax=0;
+  else if(gross<=45000)tax=(gross-18200)*.16;
+  else if(gross<=135000)tax=4288+(gross-45000)*.30;
+  else if(gross<=190000)tax=31288+(gross-135000)*.37;
+  else tax=51638+(gross-190000)*.45;
+  let lito=0;
+  if(gross<=37500)lito=700;
+  else if(gross<=45000)lito=700-(gross-37500)*.05;
+  else if(gross<=66667)lito=Math.max(0,325-(gross-45000)*.015);
+  tax=Math.max(0,tax-lito);
+  let med=0;
+  if(gross>32500)med=gross*.02;
+  else if(gross>26000)med=(gross-26000)*.10;
+  return{incomeTax:tax+med,rows:[{label:'Income Tax',value:tax,note:'2025-26 rates; after LITO (max A$700)'},{label:'Medicare Levy (2%)',value:med,note:'Phase-in below A$32,500'}]};
+}
+
+function calcAE(gross,expat){
+  if(expat)return{incomeTax:0,rows:[{label:'Income Tax',value:0,note:'No personal income tax in UAE'},{label:'All Other Deductions',value:0,note:'Expats: zero deductions'}]};
+  return{incomeTax:0,rows:[{label:'Income Tax',value:0,note:'No personal income tax in UAE'},{label:'GPSSA Pension (5%)',value:gross*.05,note:'UAE nationals only'}]};
+}
+
+function calcSA(gross,expat){
+  if(expat)return{incomeTax:0,rows:[{label:'Income Tax',value:0,note:'No income tax in Saudi Arabia'},{label:'All Other Deductions',value:0,note:'Expats: zero deductions'}]};
+  return{incomeTax:0,rows:[{label:'Income Tax',value:0,note:'No income tax in Saudi Arabia'},{label:'GOSI Pension (10%)',value:gross*.10,note:'Saudi nationals only'}]};
+}
+
+function calcPK(gross){
+  let tax=0;
+  if(gross<=600000)tax=0;
+  else if(gross<=1200000)tax=(gross-600000)*.05;
+  else if(gross<=2200000)tax=30000+(gross-1200000)*.15;
+  else if(gross<=3200000)tax=180000+(gross-2200000)*.25;
+  else if(gross<=4100000)tax=430000+(gross-3200000)*.30;
+  else tax=700000+(gross-4100000)*.35;
+  return{incomeTax:tax,rows:[{label:'Income Tax (FBR 2024-25)',value:tax},{label:'EOBI Contribution',value:10800,note:'Fixed Rs 900/month employee contribution'}]};
+}
+
+function calcZA(gross){
+  let tax=0;
+  if(gross<=245100)tax=gross*.18;
+  else if(gross<=383100)tax=44118+(gross-245100)*.26;
+  else if(gross<=530200)tax=79998+(gross-383100)*.31;
+  else if(gross<=695800)tax=125599+(gross-530200)*.36;
+  else if(gross<=887000)tax=185215+(gross-695800)*.39;
+  else if(gross<=1878600)tax=259783+(gross-887000)*.41;
+  else tax=666339+(gross-1878600)*.45;
+  tax=Math.max(0,tax-17235);
+  const uif=Math.min(gross*.01,17712);
+  return{incomeTax:tax,rows:[{label:'Income Tax (SARS)',value:tax,note:'2026-27 rates; after primary rebate R17,235'},{label:'UIF (1%)',value:uif,note:'Capped at R17,712/year'}]};
+}
+
+const US_STATES={CA:9.3,TX:0,NY:6.85,FL:0,WA:0,IL:4.95,NV:0,OR:9.9,CO:4.4,AZ:2.5};
+
+function renderCountryFields(country){
+  const el=document.getElementById('country-fields');
+  document.getElementById('filing-group').style.display=country==='US'?'':'none';
+  const maps={
+    US:`<div class="country-section"><h3>US State Tax</h3><div class="two-col"><div class="form-group"><label for="us-state-preset">State Preset</label><select id="us-state-preset" onchange="applyStatePreset()"><option value="">-- State --</option><option value="CA">California (9.3%)</option><option value="TX">Texas (0%)</option><option value="NY">New York (6.85%)</option><option value="FL">Florida (0%)</option><option value="WA">Washington (0%)</option><option value="IL">Illinois (4.95%)</option><option value="NV">Nevada (0%)</option><option value="OR">Oregon (9.9%)</option><option value="CO">Colorado (4.4%)</option><option value="AZ">Arizona (2.5%)</option></select></div><div class="form-group"><label for="us-state-pct">State Rate (%)</label><input type="number" id="us-state-pct" value="0" min="0" max="20" step="0.01"/></div></div></div>`,
+    CA:`<div class="country-section"><h3>Province</h3><div class="form-group"><label for="ca-province">Province</label><select id="ca-province"><option value="ON">Ontario (ON)</option><option value="BC">British Columbia (BC)</option><option value="AB">Alberta (AB)</option><option value="QC">Quebec (QC)</option><option value="SK">Saskatchewan (SK)</option><option value="MB">Manitoba (MB)</option></select></div></div>`,
+    BR:`<div class="country-section"><h3>Brazil Options</h3><div class="checkbox-row"><input type="checkbox" id="br-inss" checked/><label for="br-inss">Include INSS Social Security deduction</label></div></div>`,
+    GB:`<div class="country-section"><h3>UK Options</h3><div class="checkbox-row"><input type="checkbox" id="gb-sl"/><label for="gb-sl">Student Loan Plan 2 (9% above &pound;27,295)</label></div><div class="checkbox-row"><input type="checkbox" id="gb-blind"/><label for="gb-blind">Blind Person&rsquo;s Allowance (+&pound;2,870)</label></div></div>`,
+    DE:`<div class="country-section"><h3>Germany Options</h3><div class="form-group"><label>Tax Class</label><div class="toggle-group" id="de-married-toggle"><button class="active" data-val="single">Single (Class I)</button><button data-val="married">Married &mdash; Splitting (Class III)</button></div></div></div>`,
+    FR:`<div class="country-section"><h3>France &mdash; Quotient Familial</h3><div class="form-group"><label for="fr-parts">Household Status</label><select id="fr-parts"><option value="1">Single (1 part)</option><option value="2">Married, no children (2 parts)</option><option value="2.5">Married + 1 child (2.5 parts)</option><option value="3">Married + 2 children (3 parts)</option><option value="4">Married + 3 children (4 parts)</option></select></div></div>`,
+    IN:`<div class="country-section"><h3>India &mdash; FY 2025-26</h3><div class="form-group"><label>Tax Regime</label><div class="toggle-group" id="in-regime-toggle"><button class="active" data-val="new">New Regime (Budget 2025)</button><button data-val="old">Old Regime</button></div></div><div class="form-group"><label for="in-basic">Monthly Basic Salary (for EPF) <span style="color:#9CA3AF;font-weight:400">optional</span></label><div class="input-prefix"><span>&#8377;</span><input type="number" id="in-basic" placeholder="e.g. 25000" min="0"/></div></div><div class="checkbox-row"><input type="checkbox" id="in-pf" checked/><label for="in-pf">EPF Employee Deduction (12% of basic)</label></div><div class="checkbox-row"><input type="checkbox" id="in-pt" checked/><label for="in-pt">Professional Tax (&#8377;200/month)</label></div></div>`,
+    AE:`<div class="country-section"><h3>UAE Options</h3><div class="form-group"><label>Residency</label><div class="toggle-group" id="nationality-toggle"><button class="active" data-val="expat">Expat (zero deductions)</button><button data-val="national">UAE National (GPSSA 5%)</button></div></div></div>`,
+    SA:`<div class="country-section"><h3>Saudi Arabia Options</h3><div class="form-group"><label>Residency</label><div class="toggle-group" id="nationality-toggle"><button class="active" data-val="expat">Expat (zero deductions)</button><button data-val="national">Saudi National (GOSI 10%)</button></div></div></div>`,
+    SG:`<div class="country-section"><h3>Singapore Note</h3><p style="font-size:0.82rem;color:#6B7280">CPF (20% employee) applies to citizens and permanent residents only, on Ordinary Wages up to S$6,800/month.</p></div>`
+  };
+  el.innerHTML=maps[country]||'';
+  el.querySelectorAll('.toggle-group').forEach(g=>{
+    g.querySelectorAll('button').forEach(b=>{
+      b.addEventListener('click',()=>{g.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');});
+    });
+  });
+}
+
+function applyStatePreset(){
+  const v=document.getElementById('us-state-preset')?.value;
+  if(v&&US_STATES[v]!==undefined)document.getElementById('us-state-pct').value=US_STATES[v];
+}
+
+function getToggleVal(id){const g=document.getElementById(id);return g?g.querySelector('button.active')?.dataset.val||null:null;}
+
+function fmt(val,sym){
+  const abs=Math.abs(val);
+  const f=abs.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return(val<0?'–':'')+sym+f;
+}
+
+function calculate(){
+  const country=document.getElementById('country').value;
+  const grossRaw=parseFloat(document.getElementById('gross').value);
+  const freq=getToggleVal('freq-toggle')||'annual';
+  const sym=SYMBOL[country];
+  const errEl=document.getElementById('gross-error');
+  const warnEl=document.getElementById('gross-warning');
+  errEl.style.display='none'; warnEl.style.display='none';
+  if(!grossRaw||grossRaw<=0){errEl.textContent='Please enter a valid salary greater than 0.';errEl.style.display='block';return;}
+  const gross=grossRaw;
+  if(gross>AVG_SALARY[country]*10){warnEl.textContent='Double-check your input \u2014 this seems unusually high for this country.';warnEl.style.display='block';}
+  let result;
+  switch(country){
+    case'US':{const filing=document.getElementById('filing').value;const sp=parseFloat(document.getElementById('us-state-pct')?.value||0)||0;result=calcUS(gross,filing,sp);break;}
+    case'CA':{const prov=document.getElementById('ca-province')?.value||'ON';result=calcCA(gross,prov);break;}
+    case'MX':result=calcMX(gross);break;
+    case'BR':{const hi=document.getElementById('br-inss')?.checked!==false;result=calcBR(gross,hi);break;}
+    case'GB':{const sl=document.getElementById('gb-sl')?.checked||false;const bl=document.getElementById('gb-blind')?.checked||false;result=calcGB(gross,sl,bl);break;}
+    case'DE':{const m=getToggleVal('de-married-toggle')==='married';result=calcDE(gross,m);break;}
+    case'FR':{const p=parseFloat(document.getElementById('fr-parts')?.value||1);result=calcFR(gross,p);break;}
+    case'NL':result=calcNL(gross);break;
+    case'ES':result=calcES(gross);break;
+    case'IT':result=calcIT(gross);break;
+    case'RU':result=calcRU(gross);break;
+    case'IN':{const reg=getToggleVal('in-regime-toggle')||'new';const bm=parseFloat(document.getElementById('in-basic')?.value||0)||0;const pf=document.getElementById('in-pf')?.checked||false;const pt=document.getElementById('in-pt')?.checked||false;result=calcIN(gross,reg,bm,pf,pt);break;}
+    case'CN':result=calcCN(gross);break;
+    case'JP':result=calcJP(gross);break;
+    case'KR':result=calcKR(gross);break;
+    case'SG':result=calcSG(gross);break;
+    case'AU':result=calcAU(gross);break;
+    case'AE':{const exp=getToggleVal('nationality-toggle')!=='national';result=calcAE(gross,exp);break;}
+    case'SA':{const exp=getToggleVal('nationality-toggle')!=='national';result=calcSA(gross,exp);break;}
+    case'PK':result=calcPK(gross);break;
+    case'ZA':result=calcZA(gross);break;
+    default:result={incomeTax:0,rows:[]};
+  }
+  const totalDed=result.rows.reduce((s,r)=>s+r.value,0);
+  const net=gross-totalDed;
+  document.getElementById('tax-year-badge').textContent=TAX_YEAR[country];
+  const fl=freq==='monthly'?'/month':freq==='weekly'?'/week':'/year';
+  function fd(v){const dv=freq==='monthly'?v/12:freq==='weekly'?v/52:v;return fmt(dv,sym);}
+  document.getElementById('r-gross').textContent=fd(gross);
+  document.getElementById('r-gross-freq').textContent=fl;
+  document.getElementById('r-deductions').textContent=fd(Math.max(0,totalDed));
+  document.getElementById('r-ded-freq').textContent=fl;
+  document.getElementById('r-net').textContent=fd(net);
+  document.getElementById('r-net-freq').textContent=fl;
+  document.getElementById('breakdown-body').innerHTML=result.rows.map(r=>`<tr><td>${r.label}${r.note?`<br><small style="color:#9CA3AF;font-size:0.7rem">${r.note}</small>`:''}</td><td>${fmt(r.value,sym)}</td><td>${fmt(r.value/12,sym)}</td><td>${fmt(r.value/52,sym)}</td></tr>`).join('');
+  document.getElementById('breakdown-foot').innerHTML=`<tr><td>Total Deductions</td><td>${fmt(Math.max(0,totalDed),sym)}</td><td>${fmt(Math.max(0,totalDed)/12,sym)}</td><td>${fmt(Math.max(0,totalDed)/52,sym)}</td></tr><tr class="net-row"><td>Net Take-Home</td><td>${fmt(net,sym)}</td><td>${fmt(net/12,sym)}</td><td>${fmt(net/52,sym)}</td></tr>`;
+  const sd=Math.max(0,totalDed);
+  const taxP=gross>0?(Math.max(0,result.incomeTax)/gross)*100:0;
+  const otherP=gross>0?(Math.max(0,sd-result.incomeTax)/gross)*100:0;
+  const netP=gross>0?(net/gross)*100:0;
+  const bt=document.getElementById('bar-tax');
+  const bd2=document.getElementById('bar-ded');
+  const bn=document.getElementById('bar-net');
+  bt.style.width=Math.max(0,taxP).toFixed(1)+'%';bt.textContent=taxP>=5?taxP.toFixed(1)+'%':'';
+  bd2.style.width=Math.max(0,otherP).toFixed(1)+'%';bd2.textContent=otherP>=5?otherP.toFixed(1)+'%':'';
+  bn.style.width=Math.max(0,netP).toFixed(1)+'%';bn.textContent=netP>=5?netP.toFixed(1)+'%':'';
+  document.getElementById('eff-rate-badge').textContent='Your effective deduction rate is '+(gross>0?(sd/gross*100).toFixed(1):0)+'%';
+  document.getElementById('context-note').textContent=CONTEXT_NOTES[country];
+  const res=document.getElementById('results');
+  res.style.display='block';
+  setTimeout(()=>res.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
+document.getElementById('freq-toggle').querySelectorAll('button').forEach(b=>{
+  b.addEventListener('click',()=>{document.getElementById('freq-toggle').querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');});
+});
+document.getElementById('country').addEventListener('change',function(){
+  document.getElementById('currency-symbol').textContent=SYMBOL[this.value];
+  renderCountryFields(this.value);
+  document.getElementById('results').style.display='none';
+  document.getElementById('gross-error').style.display='none';
+  document.getElementById('gross-warning').style.display='none';
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter')calculate();});
+renderCountryFields('US');
+</script>
+</body>
+</html>
