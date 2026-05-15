@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ===== PRIMARY SEO ===== -->
+  <title>PaycheckDecoder — Free Take-Home Pay & Salary Tax Calculator for 21 Countries</title>
+  <meta name="description" content="Calculate your exact take-home pay after tax in 21 countries including USA, UK, India, Australia, Germany and more. Free, instant, no signup. Updated 2025–2026 tax brackets." />
+  <meta name="keywords" content="take home pay calculator, salary calculator after tax, paycheck calculator, net pay calculator, income tax calculator, salary tax calculator, US paycheck calculator, UK take home pay, India salary calculator, Australia tax calculator, Germany net salary, Canada take-home pay, payroll calculator, gross to net salary, tax deduction calculator" />
+  <link rel="canonical" href="https://paycheckdecoder.vercel.app/" />
+
+  <!-- ===== OPEN GRAPH ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://paycheckdecoder.vercel.app/" />
+  <meta property="og:title" content="PaycheckDecoder — Free Salary Take-Home Pay Calculator" />
+  <meta property="og:description" content="Know exactly what lands in your bank. Free salary calculator covering 21 countries with official 2025–2026 tax brackets. No signup required." />
+  <meta property="og:image" content="https://paycheckdecoder.vercel.app/logo_bg.png" />
+  <meta property="og:site_name" content="PaycheckDecoder" />
+
+  <!-- ===== TWITTER CARD ===== -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PaycheckDecoder — Free Salary Take-Home Pay Calculator" />
+  <meta name="twitter:description" content="Calculate your net pay in seconds. 21 countries, official 2025–2026 tax rates. Free, no signup." />
+  <meta name="twitter:image" content="https://paycheckdecoder.vercel.app/logo_bg.png" />
+
+  <!-- ===== JSON-LD SCHEMA ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://paycheckdecoder.vercel.app/#app",
+        "name": "PaycheckDecoder",
+        "url": "https://paycheckdecoder.vercel.app/calculator",
+        "description": "Free online salary and take-home pay calculator covering 21 countries with official 2025–2026 tax brackets.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Supports 21 countries",
+          "Official 2025–2026 tax brackets",
+          "Federal and state/provincial tax breakdown",
+          "Social security and payroll deduction calculation",
+          "Annual, monthly and weekly pay frequency",
+          "Dark mode",
+          "No signup required"
+        ],
+        "screenshot": "https://paycheckdecoder.vercel.app/logo_bg.png",
+        "creator": {
+          "@type": "Organization",
+          "name": "PaycheckDecoder"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://paycheckdecoder.vercel.app/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is PaycheckDecoder?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PaycheckDecoder is a free online salary calculator that shows you exactly how much money lands in your bank after all taxes and deductions. It supports 21 countries, uses official 2025–2026 tax brackets, and requires no signup or registration."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I calculate my take-home pay?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Enter your gross annual salary, select your country, choose your pay frequency (annual, monthly, or weekly), and click 'Calculate My Take-Home Pay'. PaycheckDecoder instantly shows your net pay, a full tax breakdown, and an effective tax rate."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which countries does PaycheckDecoder support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PaycheckDecoder supports 21 countries: United States, Canada, Mexico, Brazil, United Kingdom, Germany, France, Netherlands, Spain, Italy, Russia, India, China, Japan, South Korea, Singapore, Australia, UAE, Saudi Arabia, Pakistan, and South Africa."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is PaycheckDecoder free to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. PaycheckDecoder is completely free. There is no signup, no subscription, no paywall, and no hidden fees. All calculations run instantly in your browser."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How accurate are the tax calculations?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PaycheckDecoder uses official 2025–2026 tax brackets sourced from PwC Worldwide Tax Summaries and official government publications. Calculations include progressive income tax, social security, Medicare/NI/CPP/pension contributions, and standard deductions. Results are estimates; for personalised advice consult a qualified tax professional."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between gross salary and net salary?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Gross salary is your total pay before any deductions. Net salary (take-home pay) is what remains after income tax, social security contributions, and other mandatory payroll deductions are subtracted. PaycheckDecoder shows both figures alongside a full breakdown of every deduction."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is income tax calculated in the United States?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The US uses a progressive federal income tax with seven brackets ranging from 10% to 37% for 2025. The standard deduction ($15,000 for single filers) reduces your taxable income. Additional deductions include Social Security (6.2%, capped at a wage base of $176,100) and Medicare (1.45%). Most states also levy their own income tax."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does the UK PAYE system work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "In the UK, income tax is collected through Pay As You Earn (PAYE). You receive a personal allowance of £12,570 tax-free. Above that, income is taxed at 20% (basic), 40% (higher), and 45% (additional). Class 1 National Insurance contributions of 8% also apply on earnings between £12,570 and £50,270."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does PaycheckDecoder include state or provincial taxes?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. For the United States you can enter a custom state income tax rate, and the calculator applies it on top of federal tax. For Canada, provincial tax is calculated for all major provinces including Ontario, British Columbia, Alberta, Quebec, Saskatchewan, and Manitoba."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do UAE and Saudi Arabia have income tax?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Both the UAE and Saudi Arabia have zero personal income tax. In Saudi Arabia, Saudi nationals contribute 10% to GOSI (social security), but expatriates have no deductions at all — your gross salary equals your net take-home pay."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How often are tax rates updated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PaycheckDecoder is updated to reflect the latest official tax rates. Current data covers the 2025–2026 tax year for all 21 countries, sourced from PwC Worldwide Tax Summaries, government revenue bodies, and official budget announcements."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is an effective tax rate?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Your effective tax rate is the percentage of your total gross income that goes to all taxes and deductions combined. It is different from your marginal tax rate, which is the rate applied to your last dollar of income. PaycheckDecoder displays your effective tax rate after every calculation."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I calculate monthly or weekly pay?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. After entering your annual gross salary, you can switch the display frequency to monthly or weekly. PaycheckDecoder will show your gross, deductions, and net take-home for each frequency period."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="logo_bg.png" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F9FAFB; --bg2: #F3F4F6; --card: #fff; --border: #E5E7EB;
+      --text: #111827; --muted: #6B7280; --faint: #9CA3AF;
+      --accent: #111827; --accent-fg: #fff;
+      --badge-bg: #F3F4F6; --badge-border: #D1D5DB;
+    }
+    [data-theme="dark"] {
+      --bg: #0F172A; --bg2: #1E293B; --card: #1E293B; --border: #334155;
+      --text: #E2E8F0; --muted: #94A3B8; --faint: #64748B;
+      --accent: #E2E8F0; --accent-fg: #0F172A;
+      --badge-bg: #1E293B; --badge-border: #475569;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: "Inter", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: blur(8px);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 700; font-size: 1rem; }
+    .nav-logo img { height: 32px; width: auto; }
+    [data-theme="dark"] .nav-logo img { filter: brightness(0) invert(1); }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-link { text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--muted); padding: 6px 12px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+    .nav-link:hover { color: var(--text); background: var(--bg2); }
+    .nav-cta {
+      background: var(--accent); color: var(--accent-fg);
+      padding: 8px 18px; border-radius: 8px;
+      text-decoration: none; font-size: 0.875rem; font-weight: 600;
+      transition: opacity 0.15s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .theme-btn {
+      width: 34px; height: 34px; border-radius: 7px;
+      border: 1px solid var(--border); background: var(--card);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--text); transition: background 0.15s; margin-left: 4px;
+    }
+    .theme-btn:hover { background: var(--bg2); }
+    @media(max-width:600px){ .nav-link { display:none; } }
+
+    /* ── WRAPPER ── */
+    .wrapper { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── HERO ── */
+    .hero { text-align: center; padding: 80px 20px 64px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--badge-bg); border: 1px solid var(--badge-border);
+      border-radius: 20px; padding: 5px 14px;
+      font-size: 0.75rem; font-weight: 600; color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .hero-badge span { color: #22C55E; font-size: 0.6rem; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; letter-spacing: -1px;
+      line-height: 1.15; color: var(--text);
+      max-width: 820px; margin: 0 auto 20px;
+    }
+    .hero h1 em { font-style: normal; color: var(--muted); }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      color: var(--muted); max-width: 560px;
+      margin: 0 auto 36px; line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: var(--accent-fg);
+      padding: 14px 32px; border-radius: 10px;
+      text-decoration: none; font-size: 1rem; font-weight: 700;
+      transition: opacity 0.15s; display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      padding: 14px 32px; border-radius: 10px; border: 1.5px solid var(--border);
+      text-decoration: none; font-size: 1rem; font-weight: 600;
+      transition: background 0.15s; display: inline-block;
+    }
+    .btn-outline:hover { background: var(--bg2); }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+      padding: 32px 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .trust-item { text-align: center; }
+    .trust-item .t-num { font-size: 1.75rem; font-weight: 800; color: var(--text); line-height: 1; }
+    .trust-item .t-label { font-size: 0.78rem; color: var(--muted); margin-top: 4px; font-weight: 500; }
+
+    /* ── SECTIONS ── */
+    section { padding: 72px 20px; }
+    .section-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--muted); margin-bottom: 12px;
+      text-align: center;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 800; letter-spacing: -0.5px;
+      text-align: center; color: var(--text); margin-bottom: 16px;
+    }
+    .section-sub {
+      text-align: center; color: var(--muted);
+      font-size: 1rem; max-width: 540px;
+      margin: 0 auto 48px; line-height: 1.7;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .step-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 28px;
+    }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--accent); color: var(--accent-fg);
+      font-size: 1rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .step-card h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .step-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── COUNTRIES ── */
+    .countries-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 16px;
+    }
+    .country-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 20px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .country-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .country-card .flag { font-size: 1.75rem; margin-bottom: 10px; line-height: 1; display: block; }
+    .country-card .c-name { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .country-card .c-currency { font-size: 0.75rem; color: var(--faint); margin-bottom: 8px; }
+    .country-card .c-tag {
+      display: inline-block; font-size: 0.68rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 4px;
+      background: var(--bg2); color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .country-card .c-tag.zero { background: #F0FDF4; border-color: #BBF7D0; color: #166534; }
+    [data-theme="dark"] .country-card .c-tag.zero { background: #052e16; border-color: #14532d; color: #86efac; }
+
+    /* ── FEATURES ── */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .feature-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px;
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .feature-icon {
+      font-size: 1.5rem; flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: var(--bg2); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feature-card h3 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+    .feature-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 780px; margin: 0 auto; }
+    details {
+      border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 10px; background: var(--card);
+      overflow: hidden;
+    }
+    details[open] { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    summary {
+      list-style: none; cursor: pointer;
+      padding: 18px 20px; font-size: 0.95rem;
+      font-weight: 600; color: var(--text);
+      display: flex; justify-content: space-between; align-items: center;
+      user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-size: 1.2rem; color: var(--faint); font-weight: 400; flex-shrink: 0; margin-left: 12px; }
+    details[open] summary::after { content: "−"; }
+    .faq-body { padding: 0 20px 18px; font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+    .faq-body a { color: var(--text); }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: var(--accent); color: var(--accent-fg);
+      border-radius: 16px; padding: 56px 32px;
+      text-align: center; margin: 0 20px 72px;
+    }
+    .cta-banner h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 12px; }
+    .cta-banner p { font-size: 1rem; opacity: 0.75; margin-bottom: 28px; }
+    .btn-white {
+      background: var(--bg); color: var(--text);
+      padding: 14px 32px; border-radius: 10px;
+      text-decoration: none; font-size: 1rem; font-weight: 700;
+      display: inline-block; transition: opacity 0.15s;
+    }
+    .btn-white:hover { opacity: 0.9; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 20px;
+      text-align: center; font-size: 0.78rem; color: var(--faint);
+      line-height: 1.8;
+    }
+    footer a { color: var(--faint); text-decoration: underline; }
+    footer a:hover { color: var(--muted); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="logo_bg.png" alt="PaycheckDecoder logo" />
+    PaycheckDecoder
+  </a>
+  <div class="nav-links">
+    <a href="#how-it-works" class="nav-link">How it works</a>
+    <a href="#countries" class="nav-link">Countries</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <svg id="toggle-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+    <a href="/calculator" class="nav-cta">Open Calculator →</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-badge"><span>●</span> Free &middot; No Signup &middot; 21 Countries</div>
+  <h1>The Free Salary Calculator That Shows <em>Exactly</em> What Lands in Your Bank</h1>
+  <p>Enter your gross salary, pick your country, and instantly see your net take-home pay with a full breakdown of every tax and deduction — powered by official 2025–2026 tax brackets.</p>
+  <div class="hero-actions">
+    <a href="/calculator" class="btn-primary">Calculate My Take-Home Pay →</a>
+    <a href="#how-it-works" class="btn-outline">How it works</a>
+  </div>
+</section>
+
+<!-- ===== TRUST BAR ===== -->
+<div class="trust-bar">
+  <div class="trust-item"><div class="t-num">21</div><div class="t-label">Countries Supported</div></div>
+  <div class="trust-item"><div class="t-num">100%</div><div class="t-label">Free Forever</div></div>
+  <div class="trust-item"><div class="t-num">2025–26</div><div class="t-label">Tax Rates Updated</div></div>
+  <div class="trust-item"><div class="t-num">0</div><div class="t-label">Signups Required</div></div>
+  <div class="trust-item"><div class="t-num">&lt;1s</div><div class="t-label">Instant Results</div></div>
+</div>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section id="how-it-works">
+  <div class="wrapper">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Your net pay in three steps</h2>
+    <p class="section-sub">No complex forms. No account creation. Just your salary, your country, and instant clarity.</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Enter Your Gross Salary</h3>
+        <p>Type in your annual gross salary — that's the number on your job offer or employment contract before any deductions.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Select Your Country & Options</h3>
+        <p>Choose from 21 supported countries. For the US, add your state tax rate; for Canada, pick your province. Optionally set filing status or other local inputs.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>See Your Full Pay Breakdown</h3>
+        <p>Instantly view your net take-home pay, every deduction itemised by line, an effective tax rate, and a stacked visual of where your money goes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ===== COUNTRIES ===== -->
+<section id="countries">
+  <div class="wrapper">
+    <p class="section-label">Country Coverage</p>
+    <h2 class="section-title">21 Countries. One Calculator.</h2>
+    <p class="section-sub">All calculations use the latest official tax brackets, social security rates, and standard deductions for each country's 2025–2026 tax year.</p>
+    <div class="countries-grid">
+      <div class="country-card">
+        <span class="flag">🇺🇸</span>
+        <div class="c-name">United States</div>
+        <div class="c-currency">USD · Federal + State Tax</div>
+        <span class="c-tag">10%–37% brackets</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇨🇦</span>
+        <div class="c-name">Canada</div>
+        <div class="c-currency">CAD · Federal + Provincial</div>
+        <span class="c-tag">14.5%–33% + CPP / EI</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇲🇽</span>
+        <div class="c-name">Mexico</div>
+        <div class="c-currency">MXN · ISR Income Tax</div>
+        <span class="c-tag">1.92%–35% ISR 2026</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇧🇷</span>
+        <div class="c-name">Brazil</div>
+        <div class="c-currency">BRL · IRPF + INSS</div>
+        <span class="c-tag">0%–27.5% + INSS</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇬🇧</span>
+        <div class="c-name">United Kingdom</div>
+        <div class="c-currency">GBP · PAYE + NI</div>
+        <span class="c-tag">20%–45% + Class 1 NI</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇩🇪</span>
+        <div class="c-name">Germany</div>
+        <div class="c-currency">EUR · §32a EStG + Social</div>
+        <span class="c-tag">14%–45% + ~21% social</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇫🇷</span>
+        <div class="c-name">France</div>
+        <div class="c-currency">EUR · PIT + CSG/CRDS</div>
+        <span class="c-tag">11%–45% + 9.7% social</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇳🇱</span>
+        <div class="c-name">Netherlands</div>
+        <div class="c-currency">EUR · Box 1 2026</div>
+        <span class="c-tag">35.82%–49.5% Box 1</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇪🇸</span>
+        <div class="c-name">Spain</div>
+        <div class="c-currency">EUR · State + Regional</div>
+        <span class="c-tag">19%–47% + SS 6.47%</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇮🇹</span>
+        <div class="c-name">Italy</div>
+        <div class="c-currency">EUR · IRPEF + INPS</div>
+        <span class="c-tag">23%–43% + ~12% INPS</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇷🇺</span>
+        <div class="c-name">Russia</div>
+        <div class="c-currency">RUB · PIT 2025</div>
+        <span class="c-tag">13%–22% (5 tiers)</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇮🇳</span>
+        <div class="c-name">India</div>
+        <div class="c-currency">INR · New Tax Regime</div>
+        <span class="c-tag">0%–30% FY 2025-26</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇨🇳</span>
+        <div class="c-name">China</div>
+        <div class="c-currency">CNY · IIT + Social</div>
+        <span class="c-tag">3%–45% + 10.5% social</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇯🇵</span>
+        <div class="c-name">Japan</div>
+        <div class="c-currency">JPY · NIT + Inhabitant</div>
+        <span class="c-tag">5%–45% + 10% local</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇰🇷</span>
+        <div class="c-name">South Korea</div>
+        <div class="c-currency">KRW · NIT + Local</div>
+        <span class="c-tag">6%–45% + 10% surcharge</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇸🇬</span>
+        <div class="c-name">Singapore</div>
+        <div class="c-currency">SGD · YA 2026</div>
+        <span class="c-tag">2%–24% + 20% CPF</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇦🇺</span>
+        <div class="c-name">Australia</div>
+        <div class="c-currency">AUD · 2025–26</div>
+        <span class="c-tag">19%–45% + 2% Medicare</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇦🇪</span>
+        <div class="c-name">United Arab Emirates</div>
+        <div class="c-currency">AED · Tax Free</div>
+        <span class="c-tag zero">0% income tax</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇸🇦</span>
+        <div class="c-name">Saudi Arabia</div>
+        <div class="c-currency">SAR · Tax Free (expats)</div>
+        <span class="c-tag zero">0% income tax</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇵🇰</span>
+        <div class="c-name">Pakistan</div>
+        <div class="c-currency">PKR · FBR 2024-25</div>
+        <span class="c-tag">0%–35% + EOBI</span>
+      </div>
+      <div class="country-card">
+        <span class="flag">🇿🇦</span>
+        <div class="c-name">South Africa</div>
+        <div class="c-currency">ZAR · 2026-27</div>
+        <span class="c-tag">18%–45% + 1% UIF</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ===== FEATURES ===== -->
+<section id="features">
+  <div class="wrapper">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Everything you need to understand your paycheck</h2>
+    <p class="section-sub">PaycheckDecoder goes beyond a simple tax percentage — it gives you the full picture.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <div>
+          <h3>21 Countries in One Tool</h3>
+          <p>Switch between countries instantly. Americas, Europe, Asia-Pacific, and the Middle East — all in one place.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <div>
+          <h3>Itemised Deduction Breakdown</h3>
+          <p>See every deduction individually: federal tax, state tax, social security, Medicare, pension, health insurance — not just a single number.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <div>
+          <h3>Annual, Monthly & Weekly View</h3>
+          <p>Toggle between pay periods. Useful whether you are comparing job offers or budgeting monthly expenses.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div>
+          <h3>Visual Pay Stacked Bar</h3>
+          <p>A colour-coded bar shows the proportion of your income going to tax, other deductions, and take-home pay at a glance.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div>
+          <h3>Official 2025–2026 Tax Rates</h3>
+          <p>Data sourced from PwC Worldwide Tax Summaries and official government revenue bodies. Updated for every budget announcement.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <div>
+          <h3>100% Private — Runs in Your Browser</h3>
+          <p>Your salary never leaves your device. All calculations happen locally in JavaScript. No accounts, no data collection.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <div>
+          <h3>Dark Mode</h3>
+          <p>Easy on the eyes at any hour. Toggle dark or light mode with a single click, with preference saved automatically.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <div>
+          <h3>Works on Any Device</h3>
+          <p>Fully responsive layout. Use it on your phone, tablet, or desktop without installing anything.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💡</div>
+        <div>
+          <h3>Contextual Tax Notes</h3>
+          <p>Each country shows a plain-English explanation of how its tax system works, so you understand your result, not just the number.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ===== FAQ ===== -->
+<section id="faq">
+  <div class="wrapper">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-sub">Everything you want to know about take-home pay, tax calculations, and how PaycheckDecoder works.</p>
+    <div class="faq-list">
+
+      <details>
+        <summary>What is PaycheckDecoder?</summary>
+        <div class="faq-body">PaycheckDecoder is a free online salary calculator that shows you exactly how much money lands in your bank account after all taxes and deductions. It supports 21 countries, uses official 2025–2026 tax brackets, and requires no signup or registration. All calculations run instantly in your browser.</div>
+      </details>
+
+      <details>
+        <summary>How do I calculate my take-home pay?</summary>
+        <div class="faq-body">Open the <a href="/calculator">calculator</a>, enter your gross annual salary, choose your country, and click "Calculate My Take-Home Pay". You will instantly see your net pay, a full line-by-line deduction table, and your effective tax rate. You can also switch between annual, monthly, and weekly pay views.</div>
+      </details>
+
+      <details>
+        <summary>What is the difference between gross salary and net salary?</summary>
+        <div class="faq-body"><strong>Gross salary</strong> is your total pay before any deductions — the number on your job offer. <strong>Net salary</strong> (take-home pay) is what remains after income tax, social security contributions, pension contributions, and other mandatory payroll deductions are subtracted. The gap between gross and net can be surprisingly large; PaycheckDecoder helps you understand exactly why.</div>
+      </details>
+
+      <details>
+        <summary>How is income tax calculated in the United States?</summary>
+        <div class="faq-body">The US uses a <strong>progressive federal income tax</strong> with seven brackets ranging from 10% to 37% (2025 rates). The standard deduction ($15,000 for single filers, $30,000 for married filing jointly) first reduces your taxable income. On top of federal tax, Social Security is charged at 6.2% (capped at the wage base of $176,100) and Medicare at 1.45% (plus an additional 0.9% on earnings above $200,000). Most states levy an additional state income tax. PaycheckDecoder lets you enter your state rate manually.</div>
+      </details>
+
+      <details>
+        <summary>How does the UK PAYE income tax system work?</summary>
+        <div class="faq-body">In the UK, income tax is collected through the <strong>Pay As You Earn (PAYE)</strong> system. Every worker receives a personal allowance of £12,570 tax-free. Income above that is taxed at 20% (basic rate), 40% (higher rate above £50,270), and 45% (additional rate above £125,140). On top of income tax, Class 1 National Insurance (8% on earnings between £12,570 and £50,270, 2% above) is deducted. These thresholds are frozen through 2028.</div>
+      </details>
+
+      <details>
+        <summary>What social security deductions apply in Germany?</summary>
+        <div class="faq-body">German employees pay social insurance contributions on top of income tax: <strong>pension (Rentenversicherung) 9.3%</strong>, health insurance (Krankenversicherung) approximately 8.15%, unemployment insurance (Arbeitslosenversicherung) 1.3%, and long-term care insurance (Pflegeversicherung) 1.7%. The combined employee rate is roughly 20.45% of gross wages. High earners may also owe the Solidarity Surcharge (Soli). Married couples benefit from income-splitting (Ehegattensplitting).</div>
+      </details>
+
+      <details>
+        <summary>How is salary taxed in India for FY 2025-26?</summary>
+        <div class="faq-body">India's <strong>New Tax Regime</strong> is now the default for salaried employees. The 2025 Union Budget raised the Section 87A tax rebate so that income up to ₹12 lakh is effectively tax-free under the new regime. A standard deduction of ₹75,000 applies. Progressive rates above ₹12 lakh go up to 30%. The old regime (with deductions like 80C) remains available as an opt-in.</div>
+      </details>
+
+      <details>
+        <summary>Does PaycheckDecoder include state or provincial taxes?</summary>
+        <div class="faq-body">Yes. For the <strong>United States</strong> you can enter a custom state income tax percentage; the calculator adds it on top of the federal calculation. For <strong>Canada</strong>, you select your province from a dropdown and PaycheckDecoder applies the correct provincial tax brackets for Ontario, British Columbia, Alberta, Quebec, Saskatchewan, or Manitoba.</div>
+      </details>
+
+      <details>
+        <summary>Do UAE and Saudi Arabia have personal income tax?</summary>
+        <div class="faq-body">No. Both countries have <strong>zero personal income tax</strong>. In the UAE, nationals may contribute 5% to GPSSA pension, but expatriates have absolutely no deductions — gross salary equals net take-home pay. In Saudi Arabia, Saudi nationals contribute 10% to GOSI, but expat workers keep 100% of their earnings. This makes the Gulf among the most attractive salary destinations globally.</div>
+      </details>
+
+      <details>
+        <summary>What is an effective tax rate?</summary>
+        <div class="faq-body">Your <strong>effective tax rate</strong> is the percentage of your total gross income that goes to all taxes and compulsory deductions combined. It is always lower than your <strong>marginal tax rate</strong> (the rate on your last dollar of income) because progressive brackets only apply to the income within each band. For example, a US taxpayer earning $100,000 is in the 22% bracket, but their effective rate is approximately 17%. PaycheckDecoder displays your effective rate after every calculation.</div>
+      </details>
+
+      <details>
+        <summary>How accurate are the tax calculations?</summary>
+        <div class="faq-body">PaycheckDecoder uses official tax brackets and rates sourced from <strong>PwC Worldwide Tax Summaries</strong> and official government revenue bodies (IRS, HMRC, ATO, CRA, etc.), updated for 2025–2026. Standard deductions, personal allowances, and mandatory social security contributions are all included. Results are accurate estimates for typical salaried employees. Actual deductions can vary based on pension contributions, employer schemes, tax credits, and local regulations. For personalised advice, consult a qualified tax professional.</div>
+      </details>
+
+      <details>
+        <summary>Can I see my pay broken down monthly or weekly?</summary>
+        <div class="faq-body">Yes. After calculating, you can toggle the display between <strong>Annual</strong>, <strong>Monthly</strong>, and <strong>Weekly</strong> views. All figures — gross, each deduction, and net take-home — scale accordingly. This is especially useful when comparing a monthly salary offer against weekly freelance income.</div>
+      </details>
+
+      <details>
+        <summary>Is PaycheckDecoder free? Are there any hidden costs?</summary>
+        <div class="faq-body">PaycheckDecoder is <strong>completely free</strong>. There is no signup, no subscription tier, no paywall, and no hidden fees. All calculations run locally in your browser using JavaScript — your salary data never leaves your device. The tool will remain free forever.</div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA BANNER ===== -->
+<div class="wrapper">
+  <div class="cta-banner">
+    <h2>Ready to know your real take-home pay?</h2>
+    <p>Free, instant, no account required. Used by people in 21 countries.</p>
+    <a href="/calculator" class="btn-white">Open the Calculator →</a>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrapper">
+    <p style="font-weight:600;color:var(--muted);margin-bottom:6px;">PaycheckDecoder</p>
+    <p>
+      <a href="/calculator">Salary Calculator</a> &middot;
+      <a href="#countries">Countries</a> &middot;
+      <a href="#faq">FAQ</a>
+    </p>
+    <p style="margin-top:12px;">
+      Estimates based on official 2025–2026 tax brackets sourced from PwC Worldwide Tax Summaries and official government publications.<br />
+      Actual deductions may vary. Not financial advice. Consult a qualified tax professional for personalised guidance.
+    </p>
+    <p style="margin-top:10px;">&copy; 2025 PaycheckDecoder. Free forever.</p>
+  </div>
+</footer>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('pd-theme', isDark ? 'light' : 'dark');
+    updateIcon(!isDark);
+  }
+  function updateIcon(isDark) {
+    const icon = document.getElementById('toggle-icon');
+    if (!icon) return;
+    icon.innerHTML = isDark
+      ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+      : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  }
+  (function () {
+    const saved = localStorage.getItem('pd-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', saved);
+    updateIcon(saved === 'dark');
+  })();
+</script>
+
+</body>
+</html>
