@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/PaycheckDecoder.html" }
+    { "source": "/calculator", "destination": "/PaycheckDecoder.html" }
   ]
 }
